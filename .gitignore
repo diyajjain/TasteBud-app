@@ -1,3 +1,8 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -20,12 +25,6 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
-venv/
-ENV/
-env/
-.env
-
 # Django
 *.log
 local_settings.py
@@ -34,12 +33,15 @@ db.sqlite3-journal
 media/
 static/
 
+# Environment variables
+.env
+.env.*
+
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
-.DS_Store
 
 # Project specific
 *.pyc
