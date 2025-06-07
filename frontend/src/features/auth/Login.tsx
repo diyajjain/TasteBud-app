@@ -1,29 +1,45 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { apiClient } from '../../api/client'
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { login, error } = useAuth()
+  const [error, setError] = useState('')
+  const { setUser } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError('')
+    
     try {
-      await login(email, password)
+      const response = await apiClient.post('/auth/login/', {
+        email,
+        password
+      })
+      
+      const { user, token } = response.data
+      
+      // Store token in localStorage
+      localStorage.setItem('token', token)
+      
+      // Update auth context
+      setUser(user)
+      
       navigate('/') // Redirect to home page after successful login
-    } catch (err) {
-      // Error is handled by the auth context
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to login. Please try again.')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

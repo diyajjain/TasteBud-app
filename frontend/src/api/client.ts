@@ -7,13 +7,25 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Important for handling cookies/sessions
+  withCredentials: true,
 });
 
-// Add request interceptor for authentication
+// Add request interceptor for authentication and CSRF
 apiClient.interceptors.request.use(
-  (config) => {
-    // You can add auth token here if needed
+  async (config) => {
+    // Get CSRF token from cookie
+    const csrfToken = document.cookie.split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+
+    if (csrfToken) {
+      config.headers['X-CSRFToken'] = csrfToken;
+    }
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Token ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -26,8 +38,10 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      // You might want to redirect to login or refresh token
+      // Clear token and user data on unauthorized access
+      localStorage.removeItem('token');
+      // You might want to redirect to login here
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

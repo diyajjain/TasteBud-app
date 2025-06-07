@@ -1,19 +1,29 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { apiClient } from '../api/client'
 
 interface User {
   id: number
   username: string
   email: string
+  favorite_genres: string[]
+  favorite_artists: string[]
+  mood_preferences: string[]
 }
 
 interface AuthContextType {
   user: User | null
   loading: boolean
   error: string | null
+  setUser: (user: User | null) => void
   login: (email: string, password: string) => Promise<void>
   register: (username: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  updatePreferences: (preferences: {
+    favorite_genres?: string[]
+    favorite_artists?: string[]
+    mood_preferences?: string[]
+  }) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -29,11 +39,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const checkAuth = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await apiClient.get('/auth/user/')
       setUser(response.data)
     } catch (err) {
       setUser(null)
+      localStorage.removeItem('token')
     } finally {
       setLoading(false)
     }
@@ -44,10 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(null)
       const response = await apiClient.post('/auth/login/', { email, password })
       setUser(response.data.user)
-      // Store the token if your backend provides one
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token)
-      }
+      localStorage.setItem('token', response.data.token)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed')
       throw err
@@ -63,10 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       })
       setUser(response.data.user)
-      // Store the token if your backend provides one
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token)
-      }
+      localStorage.setItem('token', response.data.token)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed')
       throw err
@@ -84,15 +95,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const updatePreferences = async (preferences: {
+    favorite_genres?: string[]
+    favorite_artists?: string[]
+    mood_preferences?: string[]
+  }) => {
+    try {
+      setError(null)
+      const response = await apiClient.put('/auth/user/', preferences)
+      setUser(response.data)
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to update preferences')
+      throw err
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
         error,
+        setUser,
         login,
         register,
         logout,
+        updatePreferences,
       }}
     >
       {children}
