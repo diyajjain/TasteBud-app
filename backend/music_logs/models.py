@@ -12,6 +12,13 @@ class SongLog(models.Model):
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     elo_rating = models.FloatField(default=1500.0)
+    
+    # Spotify specific fields
+    spotify_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
+    album_art_url = models.URLField(max_length=500, blank=True, null=True)
+    preview_url = models.URLField(max_length=500, blank=True, null=True)
+    duration_ms = models.IntegerField(null=True, blank=True)
+    popularity = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ['-date', '-created_at']
