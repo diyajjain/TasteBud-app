@@ -5,6 +5,7 @@ import { Login } from './features/auth/Login'
 import { Register } from './features/auth/Register'
 import { Profile } from './features/profile/Profile'
 import { SongLogPage } from './features/songs/SongLogPage'
+import { RatingPage } from './features/ratings/RatingPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { useAuth } from './context/AuthContext'
 
@@ -50,6 +51,12 @@ function App() {
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 Log Song
+                              </Link>
+                              <Link
+                                to="/rate-songs"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Rate Songs
                               </Link>
                               <Link
                                 to="/profile"
@@ -99,6 +106,12 @@ function App() {
                                 Log Song
                               </Link>
                               <Link
+                                to="/rate-songs"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Rate Songs
+                              </Link>
+                              <Link
                                 to="/profile"
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
@@ -110,6 +123,52 @@ function App() {
                       </header>
                       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <SongLogPage />
+                      </main>
+                    </div>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/rate-songs"
+                element={
+                  <ProtectedRoute>
+                    <div>
+                      <header className="bg-white shadow">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                          <div className="flex justify-between items-center">
+                            <h1 className="text-2xl font-bold text-gray-900">Music Vibe</h1>
+                            <nav className="flex items-center space-x-4">
+                              <Link
+                                to="/"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Home
+                              </Link>
+                              <Link
+                                to="/log-song"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Log Song
+                              </Link>
+                              <Link
+                                to="/rate-songs"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Rate Songs
+                              </Link>
+                              <Link
+                                to="/profile"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Profile
+                              </Link>
+                            </nav>
+                          </div>
+                        </div>
+                      </header>
+                      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <RatingPage />
                       </main>
                     </div>
                   </ProtectedRoute>
@@ -137,6 +196,12 @@ function App() {
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 Log Song
+                              </Link>
+                              <Link
+                                to="/rate-songs"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Rate Songs
                               </Link>
                               <Link
                                 to="/profile"
