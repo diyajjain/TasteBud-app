@@ -44,8 +44,7 @@ export function Profile() {
     )
   }
 
-  const handleAddArtist = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleAddArtist = () => {
     if (newArtist.trim() && !favoriteArtists.includes(newArtist.trim())) {
       setFavoriteArtists(prev => [...prev, newArtist.trim()])
       setNewArtist('')
@@ -105,21 +104,28 @@ export function Profile() {
         {/* Favorite Artists */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Favorite Artists</h2>
-          <form onSubmit={handleAddArtist} className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4">
             <input
               type="text"
               value={newArtist}
               onChange={(e) => setNewArtist(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  handleAddArtist()
+                }
+              }}
               placeholder="Add an artist"
               className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
             />
             <button
-              type="submit"
+              type="button"
+              onClick={handleAddArtist}
               className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
             >
               Add
             </button>
-          </form>
+          </div>
           <div className="flex flex-wrap gap-2">
             {favoriteArtists.map(artist => (
               <span

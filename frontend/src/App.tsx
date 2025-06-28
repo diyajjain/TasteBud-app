@@ -6,6 +6,7 @@ import { Register } from './features/auth/Register'
 import { Profile } from './features/profile/Profile'
 import { SongLogPage } from './features/songs/SongLogPage'
 import { RatingPage } from './features/ratings/RatingPage'
+import { SocialPage } from './features/social/SocialPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { useAuth } from './context/AuthContext'
 
@@ -38,7 +39,7 @@ function App() {
                       <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                           <div className="flex justify-between items-center">
-                            <h1 className="text-2xl font-bold text-gray-900">Music Vibe</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">TasteBud</h1>
                             <nav className="flex items-center space-x-4">
                               <Link
                                 to="/"
@@ -59,6 +60,12 @@ function App() {
                                 Rate Songs
                               </Link>
                               <Link
+                                to="/social"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Social
+                              </Link>
+                              <Link
                                 to="/profile"
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
@@ -71,7 +78,7 @@ function App() {
                       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="text-center">
                           <h2 className="text-xl font-semibold text-gray-900">
-                            Welcome to Music Vibe
+                            Welcome to TasteBud
                           </h2>
                           <p className="mt-2 text-gray-600">
                             Share your music journey with the world
@@ -91,7 +98,7 @@ function App() {
                       <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                           <div className="flex justify-between items-center">
-                            <h1 className="text-2xl font-bold text-gray-900">Music Vibe</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">TasteBud</h1>
                             <nav className="flex items-center space-x-4">
                               <Link
                                 to="/"
@@ -110,6 +117,12 @@ function App() {
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 Rate Songs
+                              </Link>
+                              <Link
+                                to="/social"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Social
                               </Link>
                               <Link
                                 to="/profile"
@@ -137,7 +150,7 @@ function App() {
                       <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                           <div className="flex justify-between items-center">
-                            <h1 className="text-2xl font-bold text-gray-900">Music Vibe</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">TasteBud</h1>
                             <nav className="flex items-center space-x-4">
                               <Link
                                 to="/"
@@ -156,6 +169,12 @@ function App() {
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 Rate Songs
+                              </Link>
+                              <Link
+                                to="/social"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Social
                               </Link>
                               <Link
                                 to="/profile"
@@ -176,14 +195,14 @@ function App() {
               />
 
               <Route
-                path="/profile"
+                path="/social"
                 element={
                   <ProtectedRoute>
                     <div>
                       <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                           <div className="flex justify-between items-center">
-                            <h1 className="text-2xl font-bold text-gray-900">Music Vibe</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">TasteBud</h1>
                             <nav className="flex items-center space-x-4">
                               <Link
                                 to="/"
@@ -202,6 +221,64 @@ function App() {
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 Rate Songs
+                              </Link>
+                              <Link
+                                to="/social"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Social
+                              </Link>
+                              <Link
+                                to="/profile"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Profile
+                              </Link>
+                            </nav>
+                          </div>
+                        </div>
+                      </header>
+                      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <SocialPage />
+                      </main>
+                    </div>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <div>
+                      <header className="bg-white shadow">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                          <div className="flex justify-between items-center">
+                            <h1 className="text-2xl font-bold text-gray-900">TasteBud</h1>
+                            <nav className="flex items-center space-x-4">
+                              <Link
+                                to="/"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Home
+                              </Link>
+                              <Link
+                                to="/log-song"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Log Song
+                              </Link>
+                              <Link
+                                to="/rate-songs"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Rate Songs
+                              </Link>
+                              <Link
+                                to="/social"
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                              >
+                                Social
                               </Link>
                               <Link
                                 to="/profile"

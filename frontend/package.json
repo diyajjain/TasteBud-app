@@ -1,8 +1,9 @@
 {
-  "name": "frontend",
+  "name": "tastebud",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "TasteBud - Discover music through taste matching and connect with people who share your musical preferences",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
