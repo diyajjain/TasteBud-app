@@ -176,3 +176,28 @@ class SongLogViewSet(viewsets.ModelViewSet):
                 {'error': str(e)}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @action(detail=False, methods=['get'])
+    def search_artist(self, request):
+        """
+        Search for artists on Spotify
+        """
+        query = request.query_params.get('q', '')
+        logger.info("Received Spotify artist search request for query: %s", query)
+        if not query:
+            logger.warning("Empty artist search query received")
+            return Response(
+                {'error': 'Search query is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            spotify_service = SpotifyService()
+            results = spotify_service.search_artists(query)
+            logger.info("Returning %d artist search results for query: %s", len(results), query)
+            return Response(results)
+        except Exception as e:
+            logger.error("Error in search_artist endpoint: %s", str(e), exc_info=True)
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

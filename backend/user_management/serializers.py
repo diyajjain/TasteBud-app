@@ -5,6 +5,21 @@ from django.contrib.auth.password_validation import validate_password
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    def validate_favorite_artists(self, value):
+        # Accepts either list of strings or list of objects, always returns list of objects
+        new_value = []
+        for entry in value:
+            if isinstance(entry, dict) and 'name' in entry:
+                # Already in correct format
+                new_value.append({
+                    'id': entry.get('id', ''),
+                    'name': entry['name'],
+                    'image': entry.get('image', None)
+                })
+            elif isinstance(entry, str):
+                new_value.append({'id': '', 'name': entry, 'image': None})
+        return new_value
+
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 

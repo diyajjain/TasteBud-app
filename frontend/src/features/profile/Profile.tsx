@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { ArtistAutocomplete } from './ArtistAutocomplete'
+import type { ArtistOption } from './ArtistAutocomplete'
 
 const GENRES = [
   'Pop', 'Rock', 'Hip Hop', 'Jazz', 'Classical', 'Electronic',
@@ -14,16 +16,26 @@ const MOODS = [
 export function Profile() {
   const { user, updatePreferences, error } = useAuth()
   const [favoriteGenres, setFavoriteGenres] = useState<string[]>([])
-  const [favoriteArtists, setFavoriteArtists] = useState<string[]>([])
+  const [favoriteArtists, setFavoriteArtists] = useState<ArtistOption[]>([])
   const [moodPreferences, setMoodPreferences] = useState<string[]>([])
-  const [newArtist, setNewArtist] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     if (user) {
       setFavoriteGenres(user.favorite_genres)
-      setFavoriteArtists(user.favorite_artists)
+      // Always map to ArtistOption objects
+      if (user.favorite_artists) {
+        setFavoriteArtists(
+          user.favorite_artists.map((a: any) =>
+            typeof a === 'object'
+              ? { id: a.id || '', name: a.name, image: a.image || null }
+              : { id: '', name: a, image: null }
+          )
+        )
+      } else {
+        setFavoriteArtists([])
+      }
       setMoodPreferences(user.mood_preferences)
     }
   }, [user])
@@ -44,28 +56,33 @@ export function Profile() {
     )
   }
 
-  const handleAddArtist = () => {
-    if (newArtist.trim() && !favoriteArtists.includes(newArtist.trim())) {
-      setFavoriteArtists(prev => [...prev, newArtist.trim()])
-      setNewArtist('')
+  const handleAddArtist = (artist: ArtistOption) => {
+    if (!favoriteArtists.some(a => a.id === artist.id)) {
+      setFavoriteArtists(prev => [...prev, artist])
     }
   }
 
-  const handleRemoveArtist = (artist: string) => {
-    setFavoriteArtists(prev => prev.filter(a => a !== artist))
+  const handleRemoveArtist = (artistId: string) => {
+    setFavoriteArtists(prev => prev.filter(a => a.id !== artistId))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setSuccessMessage('')
-    
     try {
+      // If your backend expects string[] for favorite_artists, convert here:
       await updatePreferences({
         favorite_genres: favoriteGenres,
-        favorite_artists: favoriteArtists,
+        favorite_artists: favoriteArtists.map(a => a.name),
         mood_preferences: moodPreferences
       })
+      // If your backend now supports objects, send as-is:
+      // await updatePreferences({
+      //   favorite_genres: favoriteGenres,
+      //   favorite_artists: favoriteArtists,
+      //   mood_preferences: moodPreferences
+      // })
       setSuccessMessage('Preferences updated successfully!')
     } catch (err) {
       // Error is handled by the auth context
@@ -79,9 +96,18 @@ export function Profile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
-      
+    <div>
+      <div className="flex items-center mb-8 p-4 bg-blue-50 rounded-lg shadow">
+        <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
+          <span className="text-white font-bold text-2xl">
+            {user.username.charAt(0).toUpperCase()}
+          </span>
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Welcome, <span className="text-blue-700">{user.username}</span>!</h1>
+          <p className="text-gray-500">This is your music profile.</p>
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Favorite Genres */}
         <div>
@@ -104,38 +130,20 @@ export function Profile() {
         {/* Favorite Artists */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Favorite Artists</h2>
-          <div className="flex gap-2 mb-4">
-            <input
-              type="text"
-              value={newArtist}
-              onChange={(e) => setNewArtist(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  handleAddArtist()
-                }
-              }}
-              placeholder="Add an artist"
-              className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-            />
-            <button
-              type="button"
-              onClick={handleAddArtist}
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-            >
-              Add
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {favoriteArtists.map(artist => (
+          <ArtistAutocomplete onSelect={handleAddArtist} />
+          <div className="flex flex-wrap gap-2 mt-4">
+            {favoriteArtists.filter(Boolean).map(artist => (
               <span
-                key={artist}
+                key={artist.id || artist.name}
                 className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100"
               >
-                {artist}
+                {artist.image && (
+                  <img src={artist.image} alt={artist.name} className="w-5 h-5 rounded-full mr-2" />
+                )}
+                {artist.name}
                 <button
                   type="button"
-                  onClick={() => handleRemoveArtist(artist)}
+                  onClick={() => handleRemoveArtist(artist.id)}
                   className="ml-2 text-gray-500 hover:text-gray-700"
                 >
                   ×

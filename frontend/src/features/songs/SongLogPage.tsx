@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SpotifySongSearch } from '../../components/SpotifySongSearch';
 import type { SpotifySong } from '../../types/spotify';
 import type { SongLog } from '../../types/songlog';
@@ -35,20 +35,18 @@ export function SongLogPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div>
             <h1 className="text-3xl font-bold mb-6">Log a Song</h1>
-            <div className="max-w-2xl mx-auto mb-8">
+            <div className="mb-8">
                 <SpotifySongSearch onSongSelect={handleSongSelect} />
             </div>
-
             <h2 className="text-2xl font-bold mb-4">Your Logged Songs</h2>
             {loadingLogs && <p className="text-gray-500">Loading your song logs...</p>}
             {errorLogs && <p className="text-red-500">{errorLogs}</p>}
             {!loadingLogs && songLogs.length === 0 && !errorLogs && (
                 <p className="text-gray-600">No songs logged yet. Start by searching above!</p>
             )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {songLogs.map((log) => (
                     <div key={log.id} className="bg-white p-4 shadow rounded-lg flex items-center space-x-4">
                         {log.album_art_url && (

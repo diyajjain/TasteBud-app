@@ -37,5 +37,12 @@ export const spotifyApi = {
     getSongLogs: async (): Promise<SongLog[]> => {
         const response = await spotifyClient.get('/song-logs/');
         return response.data;
+    },
+
+    searchSpotifyArtists: async (query: string): Promise<{ id: string; name: string; image: string | null }[]> => {
+        const response = await spotifyClient.get('/song-logs/search_artist/', {
+            params: { q: query }
+        });
+        return response.data;
     }
 }; 

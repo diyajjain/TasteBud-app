@@ -33,7 +33,7 @@ export interface FeedItem {
         id: number;
         username: string;
         favorite_genres: string[];
-        favorite_artists: string[];
+        favorite_artists: (string | { id: string; name: string; image: string | null })[];
     };
     similarity_score: number;
     taste_match: string;
@@ -53,7 +53,7 @@ export interface DiscoveryUser {
         id: number;
         username: string;
         favorite_genres: string[];
-        favorite_artists: string[];
+        favorite_artists: (string | { id: string; name: string; image: string | null })[];
     };
     similarity_score: number;
     taste_match: string;
@@ -71,7 +71,7 @@ export interface SimilarUser {
     id: number;
     username: string;
     favorite_genres: string[];
-    favorite_artists: string[];
+    favorite_artists: (string | { id: string; name: string; image: string | null })[];
     similarity_score: number;
     taste_match: string;
 }

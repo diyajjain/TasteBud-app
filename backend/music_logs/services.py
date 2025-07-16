@@ -92,6 +92,40 @@ class SpotifyService:
             print(f"Error getting song details: {str(e)}")
             return None 
 
+    def search_artists(self, query: str, limit: int = 10) -> List[Dict]:
+        """
+        Search for artists on Spotify
+        Returns a list of artist dictionaries with relevant information
+        """
+        try:
+            logger.info("Searching Spotify for artists: %s", query)
+            results = self.sp.search(
+                q=query,
+                limit=limit,
+                type='artist',
+                market='US'
+            )
+            if not results.get('artists'):
+                logger.warning("No artists found in Spotify response for query: %s", query)
+                return []
+            artists = results['artists'].get('items', [])
+            logger.info("Found %d artists for query: %s", len(artists), query)
+            artist_list = []
+            for artist in artists:
+                try:
+                    artist_list.append({
+                        'id': artist['id'],
+                        'name': artist['name'],
+                        'image': artist['images'][0]['url'] if artist['images'] else None
+                    })
+                except (KeyError, IndexError) as e:
+                    logger.error("Error processing artist data: %s", str(e))
+                    continue
+            return artist_list
+        except Exception as e:
+            logger.error("Error searching Spotify for artists: %s", str(e), exc_info=True)
+            return []
+
 class SocialFeedService:
     """
     Service for handling social feed and user discovery based on music taste
@@ -117,8 +151,20 @@ class SocialFeedService:
         
         # Compare favorite artists (weight: 0.3)
         if user1.favorite_artists and user2.favorite_artists:
-            artist_overlap = len(set(user1.favorite_artists) & set(user2.favorite_artists))
-            artist_total = len(set(user1.favorite_artists) | set(user2.favorite_artists))
+            def extract_artist_ids_or_names(artist_list):
+                ids = set()
+                for a in artist_list:
+                    if isinstance(a, dict) and a.get('id'):
+                        ids.add(a['id'])
+                    elif isinstance(a, dict) and a.get('name'):
+                        ids.add(a['name'])
+                    elif isinstance(a, str):
+                        ids.add(a)
+                return ids
+            user1_artists = extract_artist_ids_or_names(user1.favorite_artists)
+            user2_artists = extract_artist_ids_or_names(user2.favorite_artists)
+            artist_overlap = len(user1_artists & user2_artists)
+            artist_total = len(user1_artists | user2_artists)
             if artist_total > 0:
                 artist_similarity = artist_overlap / artist_total
                 similarity_score += artist_similarity * 0.3

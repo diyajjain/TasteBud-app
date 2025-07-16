@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SocialFeed } from '../../components/SocialFeed';
 import { UserDiscovery } from '../../components/UserDiscovery';
 
@@ -8,7 +8,7 @@ export function SocialPage() {
     const [activeTab, setActiveTab] = useState<TabType>('feed');
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div>
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Social</h1>
                 <p className="text-gray-600">
@@ -54,6 +54,11 @@ export function SocialPage() {
                                 <li>• Discover new music through people who like what you like</li>
                                 <li>• Update your music preferences to improve recommendations</li>
                             </ul>
+                            <div className="mt-3 p-3 bg-blue-100 rounded-lg">
+                                <p className="text-blue-800 text-sm">
+                                    <strong>New user?</strong> Visit your Profile to set up your music preferences (genres, artists, moods) to see personalized recommendations!
+                                </p>
+                            </div>
                         </div>
                         <SocialFeed />
                     </div>
