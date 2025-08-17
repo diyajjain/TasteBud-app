@@ -462,6 +462,7 @@ class SongLogViewSet(viewsets.ModelViewSet):
                         'album_art_url': log.album_art_url,
                         'date': log.date.isoformat(),
                         'note': log.note or '',
+                        'rating': SocialFeedService.elo_to_rating_scale(log.elo_rating),  # Add 1-10 rating
                     }
                     for log in recent_logs
                 ]

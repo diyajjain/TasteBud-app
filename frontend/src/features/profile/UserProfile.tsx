@@ -20,6 +20,7 @@ interface UserProfileData {
       album_art_url: string | null;
       date: string;
       note: string;
+      rating: number;  // Add 1-10 rating field
     }>;
   };
 }
@@ -213,6 +214,12 @@ export function UserProfile() {
                     {log.note && (
                       <p className="text-sm text-gray-700 mt-1 italic">"{log.note}"</p>
                     )}
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-semibold text-blue-600">
+                      {log.rating}
+                    </span>
+                    <span className="text-sm text-gray-400">/10</span>
                   </div>
                 </div>
               ))}

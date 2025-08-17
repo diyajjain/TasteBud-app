@@ -25,3 +25,21 @@ class SongLog(models.Model):
 
     def __str__(self):
         return f"{self.song_title} by {self.artist} ({self.date})"
+    
+    @property
+    def rating(self):
+        """
+        Convert ELO score to 1-10 scale for display
+        ELO 800 → 1.0, ELO 1200 → 5.0, ELO 2000+ → 10.0
+        """
+        min_elo = 800
+        max_elo = 2000
+        
+        if self.elo_rating <= min_elo:
+            return 1.0
+        elif self.elo_rating >= max_elo:
+            return 10.0
+        else:
+            # Linear mapping: 800 → 1.0, 2000 → 10.0
+            normalized = (self.elo_rating - min_elo) / (max_elo - min_elo)
+            return round(1.0 + (normalized * 9.0), 1)

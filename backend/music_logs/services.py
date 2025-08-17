@@ -131,6 +131,21 @@ class SocialFeedService:
     Service for handling social feed and user discovery based on music taste
     """
     
+    @staticmethod
+    def elo_to_rating_scale(elo_score, min_elo=800, max_elo=2000):
+        """
+        Convert ELO score to 1-10 scale for display
+        ELO 800 → 1.0, ELO 1200 → 5.0, ELO 2000+ → 10.0
+        """
+        if elo_score <= min_elo:
+            return 1.0
+        elif elo_score >= max_elo:
+            return 10.0
+        else:
+            # Linear mapping: 800 → 1.0, 2000 → 10.0
+            normalized = (elo_score - min_elo) / (max_elo - min_elo)
+            return round(1.0 + (normalized * 9.0), 1)
+    
     @classmethod
     def calculate_taste_similarity(cls, user1: User, user2: User) -> float:
         """
@@ -153,22 +168,42 @@ class SocialFeedService:
         if user1.favorite_artists and user2.favorite_artists:
             def extract_artist_ids_or_names(artist_list):
                 ids = set()
+                names = set()
                 for a in artist_list:
                     if isinstance(a, dict) and a.get('id'):
                         ids.add(a['id'])
+                        names.add(a['name'])
                     elif isinstance(a, dict) and a.get('name'):
-                        ids.add(a['name'])
+                        names.add(a['name'])
                     elif isinstance(a, str):
-                        ids.add(a)
-                return ids
-            user1_artists = extract_artist_ids_or_names(user1.favorite_artists)
-            user2_artists = extract_artist_ids_or_names(user2.favorite_artists)
-            artist_overlap = len(user1_artists & user2_artists)
-            artist_total = len(user1_artists | user2_artists)
-            if artist_total > 0:
-                artist_similarity = artist_overlap / artist_total
-                similarity_score += artist_similarity * 0.3
-                total_weight += 0.3
+                        names.add(a)
+                return ids, names
+            
+            user1_ids, user1_names = extract_artist_ids_or_names(user1.favorite_artists)
+            user2_ids, user2_names = extract_artist_ids_or_names(user2.favorite_artists)
+            
+            # Debug logging
+            logger.info(f"User {user1.username} artists - IDs: {user1_ids}, Names: {user1_names}")
+            logger.info(f"User {user2.username} artists - IDs: {user2_ids}, Names: {user2_names}")
+            
+            # Try ID matching first (most reliable)
+            if user1_ids and user2_ids:
+                id_overlap = len(user1_ids & user2_ids)
+                id_total = len(user1_ids | user2_ids)
+                if id_total > 0:
+                    artist_similarity = id_overlap / id_total
+                    logger.info(f"Artist similarity by ID: {artist_similarity} ({id_overlap}/{id_total})")
+                    similarity_score += artist_similarity * 0.3
+                    total_weight += 0.3
+            # Fallback to name matching if no ID match
+            elif user1_names and user2_names:
+                name_overlap = len(user1_names & user2_names)
+                name_total = len(user1_names | user2_names)
+                if name_total > 0:
+                    artist_similarity = name_overlap / name_total
+                    logger.info(f"Artist similarity by name: {artist_similarity} ({name_overlap}/{name_total})")
+                    similarity_score += artist_similarity * 0.3
+                    total_weight += 0.3
         
         # Compare mood preferences (weight: 0.2)
         if user1.mood_preferences and user2.mood_preferences:
@@ -263,6 +298,7 @@ class SocialFeedService:
                 'created_at': log.created_at,
                 'album_art_url': log.album_art_url,
                 'elo_rating': log.elo_rating,
+                'rating': cls.elo_to_rating_scale(log.elo_rating),  # 1-10 scale
                 'user': {
                     'id': log.user.id,
                     'username': log.user.username,
@@ -327,7 +363,8 @@ class SocialFeedService:
                         'artist': log.artist,
                         'album': log.album,
                         'album_art_url': log.album_art_url,
-                        'date': log.date
+                        'date': log.date,
+                        'rating': cls.elo_to_rating_scale(log.elo_rating)  # 1-10 scale
                     }
                     for log in recent_logs
                 ],

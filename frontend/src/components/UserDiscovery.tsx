@@ -169,6 +169,12 @@ export const UserDiscovery: React.FC<UserDiscoveryProps> = ({ className = '' }) 
                                                     {song.artist}
                                                 </p>
                                             </div>
+                                            <div className="flex items-center space-x-1">
+                                                <span className="text-xs font-semibold text-blue-600">
+                                                    {song.rating}
+                                                </span>
+                                                <span className="text-xs text-gray-400">/10</span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

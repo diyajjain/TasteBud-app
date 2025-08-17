@@ -29,6 +29,7 @@ export interface FeedItem {
     created_at: string;
     album_art_url: string | null;
     elo_rating: number;
+    rating: number;  // 1-10 scale rating
     user: {
         id: number;
         username: string;
@@ -63,6 +64,7 @@ export interface DiscoveryUser {
         album: string;
         album_art_url: string | null;
         date: string;
+        rating: number;
     }[];
     total_songs: number;
 }

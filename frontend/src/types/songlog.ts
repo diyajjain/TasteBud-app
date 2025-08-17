@@ -9,6 +9,7 @@ export interface SongLog {
     date: string; // YYYY-MM-DD format
     created_at: string; // ISO string format
     elo_rating: number;
+    rating: number; // 1-10 scale rating
     spotify_id: string | null;
     album_art_url: string | null;
     preview_url: string | null;

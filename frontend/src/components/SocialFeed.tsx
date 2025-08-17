@@ -233,12 +233,15 @@ export const SocialFeed: React.FC<SocialFeedProps> = ({ className = '' }) => {
                                         ))}
                                     </div>
 
-                                    {/* ELO Rating */}
+                                    {/* Rating */}
                                     <div className="mt-3 flex items-center space-x-2">
                                         <span className="text-sm text-gray-500">Rating:</span>
-                                        <span className="text-lg font-semibold text-gray-900">
-                                            {Math.round(item.elo_rating)}
-                                        </span>
+                                        <div className="flex items-center space-x-1">
+                                            <span className="text-lg font-bold text-blue-600">
+                                                {item.rating}
+                                            </span>
+                                            <span className="text-sm text-gray-500">/10</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

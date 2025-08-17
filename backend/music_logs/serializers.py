@@ -6,7 +6,7 @@ class SongLogSerializer(serializers.ModelSerializer):
         model = SongLog
         fields = [
             'id', 'user', 'song_title', 'artist', 'album', 'note', 
-            'date', 'created_at', 'elo_rating', 'spotify_id', 
+            'date', 'created_at', 'elo_rating', 'rating', 'spotify_id', 
             'album_art_url', 'preview_url', 'duration_ms', 'popularity'
         ]
-        read_only_fields = ['id', 'created_at', 'elo_rating'] 
+        read_only_fields = ['id', 'created_at', 'elo_rating', 'rating'] 

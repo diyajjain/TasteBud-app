@@ -161,7 +161,8 @@ class RatingService:
             }
         
         songs = SongLog.objects.filter(user=user)
-        avg_rating = songs.aggregate(avg=models.Avg('elo_rating'))['avg']
+        # Calculate average using 1-10 scale ratings instead of raw ELO
+        avg_rating = sum(song.rating for song in songs) / total_songs if total_songs > 0 else 0
         highest_rated = songs.order_by('-elo_rating').first()
         lowest_rated = songs.order_by('elo_rating').first()
         
@@ -172,11 +173,11 @@ class RatingService:
             'highest_rated_song': {
                 'title': highest_rated.song_title,
                 'artist': highest_rated.artist,
-                'rating': highest_rated.elo_rating
+                'rating': highest_rated.rating  # Use 1-10 scale rating
             } if highest_rated else None,
             'lowest_rated_song': {
                 'title': lowest_rated.song_title,
                 'artist': lowest_rated.artist,
-                'rating': lowest_rated.elo_rating
+                'rating': lowest_rated.rating  # Use 1-10 scale rating
             } if lowest_rated else None
         } 

@@ -91,7 +91,7 @@ export const SongRankings: React.FC<SongRankingsProps> = ({ className = '' }) =>
                             <h4 className="font-semibold text-green-800 mb-2">🏆 Highest Rated</h4>
                             <p className="text-green-700">
                                 {stats.highest_rated_song.title} by {stats.highest_rated_song.artist}
-                                <span className="ml-2 font-semibold">({Math.round(stats.highest_rated_song.rating)})</span>
+                                <span className="ml-2 font-semibold">({stats.highest_rated_song.rating}/10)</span>
                             </p>
                         </div>
                     )}
@@ -102,7 +102,7 @@ export const SongRankings: React.FC<SongRankingsProps> = ({ className = '' }) =>
             <div className="bg-white rounded-lg shadow">
                 <div className="px-6 py-4 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900">Your Song Rankings</h3>
-                    <p className="text-sm text-gray-600">Songs ranked by ELO rating</p>
+                    <p className="text-sm text-gray-600">Songs ranked by rating</p>
                 </div>
                 
                 {rankings.length === 0 ? (
@@ -147,10 +147,10 @@ export const SongRankings: React.FC<SongRankingsProps> = ({ className = '' }) =>
                                     
                                     {/* Rating */}
                                     <div className="flex-shrink-0 text-right">
-                                        <div className="text-2xl font-bold text-gray-900">
-                                            {Math.round(song.elo_rating)}
+                                        <div className="text-2xl font-bold text-blue-600">
+                                            {song.rating}
                                         </div>
-                                        <div className="text-sm text-gray-500">ELO Rating</div>
+                                        <div className="text-sm text-gray-500">Rating</div>
                                     </div>
                                 </div>
                                 

@@ -18,7 +18,7 @@ export function RatingPage() {
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Rate Your Songs</h1>
                 <p className="text-gray-600">
-                    Compare your songs and build your personal ranking using the ELO system
+                    Compare your songs and build your personal ranking using our rating system
                 </p>
             </div>
 
@@ -57,7 +57,7 @@ export function RatingPage() {
                             <ul className="text-blue-700 text-sm space-y-1">
                                 <li>• You'll see two songs side by side</li>
                                 <li>• Click on your preferred song to select it</li>
-                                <li>• Submit your choice to update the ELO ratings</li>
+                                <li>• Submit your choice to update the ratings</li>
                                 <li>• The more you compare, the more accurate your rankings become</li>
                             </ul>
                         </div>

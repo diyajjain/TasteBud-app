@@ -24,6 +24,13 @@ function AppContent() {
   const { logout } = useAuth()
 
   const handleLogout = async () => {
+    // Add confirmation step
+    const isConfirmed = window.confirm('Are you sure you want to log out?')
+    
+    if (!isConfirmed) {
+      return // User cancelled the logout
+    }
+    
     try {
       await logout()
       // The logout function will clear the token and redirect to login
