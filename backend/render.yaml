@@ -3,6 +3,7 @@ services:
     name: tastebud-backend
     env: python
     plan: free
+    rootDir: backend
     buildCommand: ./build.sh
     startCommand: gunicorn core.wsgi:application
     envVars:
