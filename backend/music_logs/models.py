@@ -22,7 +22,6 @@ class SongLog(models.Model):
 
     class Meta:
         ordering = ['-date', '-created_at']
-        unique_together = ['user', 'date']
 
     def __str__(self):
         return f"{self.song_title} by {self.artist} ({self.date})"

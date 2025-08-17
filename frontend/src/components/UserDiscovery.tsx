@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { socialApi, type DiscoveryUser } from '../api/social';
 
 interface UserDiscoveryProps {
@@ -178,9 +179,11 @@ export const UserDiscovery: React.FC<UserDiscoveryProps> = ({ className = '' }) 
                                 <span className="text-sm text-gray-500">
                                     {discoveryUser.total_songs} songs logged
                                 </span>
-                                <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                    View Profile
-                                </button>
+                                <Link to={`/profile/${discoveryUser.user.id}`}>
+                                    <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                        View Profile
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     ))}

@@ -55,26 +55,28 @@ class LoginView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Find user by email
+        # Find user by email and authenticate directly
         try:
             user = User.objects.get(email=email)
-            user = authenticate(username=user.username, password=password)
+            if user.check_password(password):
+                # Password is correct, create token and login
+                login(request, user)
+                token, _ = Token.objects.get_or_create(user=user)
+                
+                return Response({
+                    'user': UserSerializer(user).data,
+                    'token': token.key
+                })
+            else:
+                return Response(
+                    {'error': 'Invalid credentials'},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
         except User.DoesNotExist:
-            user = None
-        
-        if not user:
             return Response(
                 {'error': 'Invalid credentials'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-
-        login(request, user)
-        token, _ = Token.objects.get_or_create(user=user)
-        
-        return Response({
-            'user': UserSerializer(user).data,
-            'token': token.key
-        })
 
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
