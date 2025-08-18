@@ -183,7 +183,7 @@ if DEBUG:
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
-        "https://your-frontend-domain.vercel.app",  # Update this with your actual frontend URL
+        "https://taste-bud-app.vercel.app",  # Just the domain, no /login
         "http://localhost:5173",  # Keep for local development
     ]
 CORS_ALLOW_CREDENTIALS = True
