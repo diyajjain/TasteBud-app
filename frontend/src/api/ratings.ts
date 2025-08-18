@@ -1,7 +1,9 @@
 import axios from 'axios';
 import type { SongLog } from '../types/songlog';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Temporarily hardcoded for testing deployment
+const API_URL = 'https://tastebud-backend.onrender.com/api';
+// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // Create an axios instance with default config
 const ratingsClient = axios.create({
